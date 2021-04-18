@@ -17,6 +17,8 @@ cd projetweb
 
 composer install
 
+cat .env.testu > .env
+
 php bin/console d:d:c
 
 php bin/console m:migration
@@ -27,4 +29,4 @@ cat nginx.conf > /etc/nginx/sites-available/default
 
 systemctl restart nginx
 
-chown www-data:www-data -R /var/www/html/webapp/
+chown www-data:www-data -R /var/www/html/projetweb/

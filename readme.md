@@ -6,7 +6,7 @@ Pour pouvez télécharger le script d'installation et le lancer.
 
 Pour cela il faut simplement pull le projet git et ensuite éxécuter le script d'installation : 
 ```bash
-curl https://github.com/Resiflo/Pokedex_symfony/blob/main/install.sh | bash
+curl https://raw.githubusercontent.com/Resiflo/Pokedex_symfony/main/install.sh | bash
 ```
 
 L'import des pokemon est se fait avec le fichier pokemon.csv ou avec la requete sql dans le fichier pokemon.sql disponibles dans la racine du projet.
