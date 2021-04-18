@@ -3,6 +3,19 @@ readme.md
 # Installation
 
 Pour pouvez télécharger le script d'installation et le lancer. 
+
+Pour cela il faut simplement pull le projet git et ensuite éxécuter le script d'installation : 
+```bash
+curl https://github.com/Resiflo/Pokedex_symfony/blob/main/install.sh | bash
+```
+
+L'import des pokemon est se fait avec le fichier pokemon.csv ou avec la requete sql dans le fichier pokemon.sql disponibles dans la racine du projet.
+
+
+Une version fonctionnelle du projet se trouve à l'adresse suivante :
+ 
+http://91.121.146.228:29829
+
 ## Nginx
 
 Nginx version : 1.14.2
@@ -65,100 +78,4 @@ Exemple:
   ```
 
 
-## Controllers
-
-### Home
-
-Le controller Home contient l'affichage et la recherche de chaque pokemon. 
-Chaque recherche appel la fonction `findAllPagedAndSorted` qui va chercher dans la base de donnée les informations nécessaire.
-
-L'affichage est controlé par un paginateur qui limite le nombre d'éléments.
-
-Code du controller:
-
-```php
- public function index(Request $request, int $page = 1, PokemonRepository $pokemonRepository, TypeRepository $typeRepository, GenerationRepository $generationRepository ): Response
-    {
-        
-        $nbPokemonByPage = $this->getParameter('NB_POKEMON_BY_PAGE');
-        $pokemon = $pokemonRepository->findAllPagedAndSorted($page, $nbPokemonByPage, ['nom'=> $request->request->get('nomSelected'),'type1'=> $request->request->get('type1Selected'),
-        'type2'=> $request->request->get('type2Selected'),'generation'=>$request->request->get('generationSelected')]);
-        $types = $typeRepository->findBy([],['name'=>'ASC']);
-        $generations = $generationRepository->findBy([],['name' => 'ASC']);
-
-        $pagination = array(
-            'page' => $page,
-            'nbPages' => ceil(count($pokemon) / $nbPokemonByPage),
-            'nomRoute' => 'pokemon_index',
-            'paramsRoute' => array()
-        );
-        return $this->render('pokemon/index.html.twig', [
-            'pokemon' => $pokemon,
-            'pagination' => $pagination,
-            'generations' => $generations,
-            'types' => $types
-        ]);
-    }
-```
-Code du repository :
-
-```php
-  /**
-  * Récupère une liste d'article paginés et triés par date de création.
-  *
-  * @param int $page Le numéro de la page
-  * @param int $nbMaxByPage Nombre maximum d'articles par page     
-  *
-  * @throws InvalidArgumentException
-  * @throws NotFoundHttpException
-  *
-  * @return Paginator
-  */
-  public function findAllPagedAndSorted($page, $nbMaxByPage, $sqlfilters=[])
-    {
-        if (!is_numeric($page)) {
-            throw new InvalidArgumentException(
-                'La valeur de l\'argument $page est incorrecte (valeur : ' . $page . ').'
-            );
-        }
-  
-        if ($page < 1) {
-            throw new NotFoundHttpException('La page demandée n\'existe pas');
-        }
-  
-        if (!is_numeric($nbMaxByPage)) {
-            throw new InvalidArgumentException(
-                'La valeur de l\'argument $nbMaxParPage est incorrecte (valeur : ' . $nbMaxByPage . ').'
-            );
-        }
-  
-        
-        $qb = $this->createQueryBuilder('pokemon')
-            ->andWhere('pokemon.nom like :nom')
-            ->setParameter('nom', "%$sqlfilters[nom]%")
-            ->leftJoin('pokemon.type1', 'type1')
-            ->andWhere('type1.name like :type1')
-            ->setParameter('type1', "%$sqlfilters[type1]%")
-            ->leftJoin('pokemon.type2', 'type2')
-            ->andWhere('type2.name like :type2')
-            ->setParameter('type2', "%$sqlfilters[type2]%")
-            ->leftJoin('pokemon.generation', 'generation')
-            ->andWhere('generation.name like :generation')
-            ->setParameter('generation', "%$sqlfilters[generation]%")
-            ->orderBy('pokemon.numero', 'ASC');
-            
-  
-        $query = $qb->getQuery();
-        $firstResult = ($page - 1) * $nbMaxByPage;
-        $query->setFirstResult($firstResult)->setMaxResults($nbMaxByPage);
-        $paginator = new Paginator($query);
-  
-        if ( ($paginator->count() <= $firstResult) && $page != 1) {
-            throw new NotFoundHttpException('La page demandée n\'existe pas.'); // page 404, sauf pour la première page
-        }
-  
-        return $paginator;
-    }
-}
-```
-
+## 
