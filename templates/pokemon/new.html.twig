@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Import{% endblock %}
+
+{% block body %}
+    <h1>Importer un nouveau pokemon</h1>
+
+    {{ include('pokemon/_form.html.twig') }}
+
+    <a href="{{ path('pokemon_index') }}">Retourner au pokedex</a>
+{% endblock %}

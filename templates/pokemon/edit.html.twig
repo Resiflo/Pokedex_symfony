@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Pokemon{% endblock %}
+
+{% block body %}
+    <h1>Modifier le pokemon</h1>
+
+    {{ include('pokemon/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('pokemon_index') }}">Retourner au pokedex</a>
+
+    {{ include('pokemon/_delete_form.html.twig') }}
+{% endblock %}

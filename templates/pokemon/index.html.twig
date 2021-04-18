@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pokedex{% endblock %}
+
+{% block body %}
+    <h1>Pokedex</h1>
+
+    <form  action="" method ='post' class="row row-cols-lg-auto g-3 align-items-center">
+        <div class="col-12">
+            <label class="visually-hidden" for="inlineFormInputGroupUsername">Pokemon</label>
+            <div class="input-group">
+                <div class="input-group-text">Pokemon</div>
+                <input type="text" class="form-control" name="nomSelected" placeholder="En anglais SVP !">
+            </div>
+        </div>
+        <div class="col-12">
+            <label class="visually-hidden" for="inlineFormSelectPref">Type 1</label>
+            <select class="form-select" name="type1Selected">
+                <option selected value = "">Type primaire</option>
+                {% for type in types %}
+                    <option value="{{type.name}}">{{type.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+         <div class="col-12">
+            <label class="visually-hidden" for="inlineFormSelectPref">Type 2</label>
+            <select class="form-select" name="type2Selected">
+                <option selected value = "">Type secondaire</option>
+                {% for type in types %}
+                    <option value="{{type.name}}">{{type.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-12">
+            <label class="visually-hidden" for="inlineFormSelectPref">Generations</label>
+            <select class="form-select" name="generationSelected">
+                <option selected value = "">Génération</option>
+                {% for generation in generations %}
+                    <option value="{{generation.name}}">{{generation.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </div>
+    </form>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Numero</th>
+                <th>Nom</th>
+                <th>Vie</th>
+                <th>Attaque</th>
+                <th>Defense</th>
+                <th>Legendaire</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for pokemon in pokemon %}
+            <tr>
+                <td>{{ pokemon.numero }}</td>
+                <td>{{ pokemon.nom }}</td>
+                <td>{{ pokemon.vie }}</td>
+                <td>{{ pokemon.attaque }}</td>
+                <td>{{ pokemon.defense }}</td>
+                <td>{{ pokemon.legendaire ? 'Oui' : 'Non' }}</td>
+                <td>
+                    <a href="{{ path('pokemon_show', {'id': pokemon.id}) }}">Voir</a>
+                    <a href="{{ path('pokemon_edit', {'id': pokemon.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">Pas de pokemon trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+   
+
+    <a href="{{ path('pokemon_new') }}">Ajouter un pokemon au pokedex</a>
+
+    {% if pagination.nbPages > 0 %}
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if pagination.page > 1 %}
+                <li class="page-item"><a class="page-link" href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': 1})) }}">Debut</a></li>
+                <li class="page-item"><a class="page-link" href="{{ path(pagination.nomRoute,
+                    pagination.paramsRoute|merge({'page': pagination.page-1})) }}">Précédent</a></li>
+            {% endif %}
+            {% for p in range(max(pagination.page-4, 1), min(pagination.page+4, pagination.nbPages)) %}
+                <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': p})) }}">{{p}}</a>
+                </li>
+            {% endfor %}
+            {% if pagination.page < pagination.nbPages %}
+                <li class="page-item"><a class="page-link" href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': pagination.page+1})) }}">Suivant</a></li>
+                <li class="page-item"><a class="page-link" href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': pagination.nbPages})) }}">Fin</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+{% endif %}
+{% endblock %}

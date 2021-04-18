@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href ="{{asset('bootstrap/css/bootstrap.min.css')}}">
+        <title>{% block title %}Pokedex{% endblock %}</title>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ path('pokemon_index') }}">Pokedex</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    </ul>
+                    <li class="d-flex">
+                        {% if app.user %}
+                            <a class="nav-link" href="{{ path('app_logout') }}">Se deconnecter</a>
+                        {% else %}
+                            <a class="nav-link" href="{{ path('app_login') }}">Se connecter</a>
+                        {% endif %}
+                    </li>
+                </div>
+            </div>
+        </nav>
+
+
+        {# Run `composer require symfony/webpack-encore-bundle`
+           and uncomment the following Encore helpers to start using Symfony UX #}
+        {% block stylesheets %}
+            {#{{ encore_entry_link_tags('app') }}#}
+        {% endblock %}
+
+        {% block javascripts %}
+            {#{{ encore_entry_script_tags('app') }}#}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="container">
+        {% block body %}{% endblock %}
+        </div>  
+    </body>
+</html>
